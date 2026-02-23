@@ -26,8 +26,14 @@ let userDataArr = [
 server.use(express.json());
 
 server.use("/", (req, res, next) => {
-    // res.send("working");
-    next();
+    console.log(JSON.stringify(req.headers));
+    if(!req.headers["x-auth-token"] || req.headers["x-auth-token"]!="secret123"){
+        res.status(400).send("unauthorized user");
+    }else{
+        next();
+
+    }
+    
 });
 
 // get all user apis
@@ -115,6 +121,6 @@ server.delete("/api/users/:id", (req, res) => {
 });
 
 server.use("/", (error, req, res, next) => {
-    res.status(500).send("Internal server error");
+    res.status(500).send("Internal server error = ",error);
 });
 
